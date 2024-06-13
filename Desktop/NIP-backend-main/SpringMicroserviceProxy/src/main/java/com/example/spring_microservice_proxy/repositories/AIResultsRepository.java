@@ -1,8 +1,0 @@
-package com.example.spring_microservice_proxy.repositories;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface AIResultsRepository extends JpaRepository<AIResultJPAEntity, String> {
-}
