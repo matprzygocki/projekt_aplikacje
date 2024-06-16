@@ -1,16 +1,9 @@
 package com.example.spring_microservice_proxy.repositories;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.Instant;
+import java.util.UUID;
+
 @Entity
 public class ComplaintJPAEntity {
 
@@ -20,6 +13,14 @@ public class ComplaintJPAEntity {
     private String companyName;
     private String deviceModel;
     private String faultDescription;
+
+    @Column(unique = true) // Możesz dodać unikalność dla numeru reklamacji
+    private String complaintNumber;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
     private String complaintStatus;
 
     // Gettery i Settery
@@ -56,11 +57,32 @@ public class ComplaintJPAEntity {
         this.faultDescription = faultDescription;
     }
 
+    public String getComplaintNumber() {
+        return complaintNumber;
+    }
+
+    public void setComplaintNumber(String complaintNumber) {
+        this.complaintNumber = complaintNumber;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public String getComplaintStatus() {
         return complaintStatus;
     }
 
     public void setComplaintStatus(String complaintStatus) {
         this.complaintStatus = complaintStatus;
+    }
+
+    @PostPersist
+    private void generateComplaintNumber() {
+        this.complaintNumber = UUID.randomUUID().toString();
     }
 }

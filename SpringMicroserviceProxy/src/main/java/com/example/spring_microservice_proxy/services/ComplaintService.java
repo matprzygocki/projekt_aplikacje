@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +32,8 @@ public class ComplaintService {
     }
 
     public ComplaintJPAEntity addComplaint(ComplaintJPAEntity complaint) {
+        complaint.setComplaintNumber(UUID.randomUUID().toString()); // Ustawienie numeru reklamacji
+        complaint.setCreatedAt(Instant.now()); // Ustawienie daty dodania
         return complaintRepository.save(complaint);
     }
 
@@ -41,6 +46,8 @@ public class ComplaintService {
             return complaintRepository.save(complaint);
         }).orElseGet(() -> {
             updatedComplaint.setId(id);
+            updatedComplaint.setComplaintNumber(UUID.randomUUID().toString()); // Ustawienie numeru reklamacji
+            updatedComplaint.setCreatedAt(Instant.now()); // Ustawienie daty dodania
             return complaintRepository.save(updatedComplaint);
         });
     }
@@ -53,6 +60,7 @@ public class ComplaintService {
             complaint.setDeviceModel("Model " + i);
             complaint.setFaultDescription("Description " + i);
             complaint.setComplaintStatus("W trakcie realizacji");
+            complaint.setCreatedAt(Instant.now()); // Ustawienie daty dodania
             complaintRepository.save(complaint);
         }
     }
@@ -63,7 +71,9 @@ public class ComplaintService {
         dto.setCompanyName(complaint.getCompanyName());
         dto.setDeviceModel(complaint.getDeviceModel());
         dto.setFaultDescription(complaint.getFaultDescription());
+        dto.setComplaintNumber(complaint.getComplaintNumber());
         dto.setComplaintStatus(complaint.getComplaintStatus());
+        dto.setCreatedAt(complaint.getCreatedAt());
         return dto;
     }
 }
